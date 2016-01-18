@@ -50,12 +50,11 @@ ADD etc/oracle/weblogic-response-file.txt $WLS_RESPONSE_FILE
 ADD etc/oracle/create-wls-domain.py /home/camunda/
 
 # Install WebLogic as camunda users
-USER camunda
-RUN /usr/local/bin/install-weblogic.sh
+RUN su camunda -c /usr/local/bin/install-weblogic.sh
 # Create Weblogic domain
-RUN /usr/local/bin/create-wls-domain.sh
+RUN su camunda -c /usr/local/bin/create-wls-domain.sh
 # Create symlink to log
-RUN ln -s --target-directory=/home/camunda ${WLS_DOMAIN_HOME}/servers/${WLS_SERVER}/logs/${WLS_SERVER}.log
+RUN su camunda -c "ln -s --target-directory=/home/camunda ${WLS_DOMAIN_HOME}/servers/${WLS_SERVER}/logs/${WLS_SERVER}.log"
 
 # expose weblogic and vnc ports
 EXPOSE 5900 $WLS_HTTP_PORT $WLS_HTTPS_PORT $WLS_DEBUG_PORT
