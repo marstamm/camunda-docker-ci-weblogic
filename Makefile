@@ -40,7 +40,7 @@ NO_CACHE=false
 build:
 	$(shell sed '1s!.*!FROM $(PARENT_IMAGE)!' Dockerfile > $(DOCKERFILE_TMP))
 	$(DOCKER) build -f $(DOCKERFILE_TMP) --rm=$(REMOVE) --force-rm=$(FORCE_RM) --no-cache=$(NO_CACHE) -t $(IMAGE) .
-	@for tag in $(ADDITIONAL_TAGS); do \
+	for tag in $(ADDITIONAL_TAGS); do \
 		$(DOCKER) tag -f $(IMAGE) $(IMAGE_NAME):$$tag; \
 	done
 
@@ -54,7 +54,7 @@ pull-from:
 
 # push container to registry
 push:
-	@for tag in $(TAGS); do \
+	for tag in $(TAGS); do \
 		$(DOCKER) push $(IMAGE_NAME):$$tag; \
 	done
 
