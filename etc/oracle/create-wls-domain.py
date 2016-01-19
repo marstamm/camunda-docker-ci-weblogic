@@ -1,4 +1,4 @@
-# Script partly based on %ORACLE_HOME%/wlserver/common/templates/scripts/wlst/basicWLSDomain.py
+# Script partly based on %WLS_INSTALL_HOME%/wlserver/common/templates/scripts/wlst/basicWLSDomain.py
 
 # WebLogic Default Domain
 admin_port = int(os.environ.get("WLS_HTTP_PORT"))

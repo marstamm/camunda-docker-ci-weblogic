@@ -4,7 +4,7 @@ FROM registry.camunda.com/camunda-ci-base-centos:latest
 ENV JDK_VERSION=8u66-b17/jdk-8u66-linux-x64.rpm \
     WLS_PKG_FILE=fmw_12.2.1.0.0_wls_quick_Disk1_1of1.zip \
     WLS_INSTALL_FILE=fmw_12.2.1.0.0_wls_quick.jar \
-    ORACLE_HOME=/home/camunda/oracle/ \
+    WLS_INSTALL_HOME=/home/camunda/oracle/ \
     WLS_HOME=/home/camunda/oracle/wlserver/ \
     WLS_DOMAIN_HOME=/home/camunda/oracle/domains/base_domain/ \
     WLS_BIN_DIR=/home/camunda/oracle/oracle_common/common/bin \
@@ -24,7 +24,7 @@ ENV JAVA_OPTIONS "-Djava.security.egd=file:/dev/./urandom\ -XX:+PrintCommandLine
 
 RUN add-path.sh $WLS_BIN_DIR
 
-RUN save-env.sh ORACLE_HOME WLS_HOME WLS_DOMAIN_HOME WLS_HTTP_PORT WLS_HTTPS_PORT WLS_DEBUG_PORT CONFIG_JVM_ARGS USER_MEM_ARGS JAVA_OPTIONS DISPLAY DISPLAY_WIDTH DISPLAY_HEIGHT DISPLAY_DEPTH
+RUN save-env.sh WLS_INSTALL_HOME WLS_HOME WLS_DOMAIN_HOME WLS_SERVER WLS_ADMIN_USERNAME WLS_ADMIN_PASSWORD WLS_HTTP_PORT WLS_HTTPS_PORT WLS_DEBUG_PORT CONFIG_JVM_ARGS USER_MEM_ARGS JAVA_OPTIONS DISPLAY DISPLAY_WIDTH DISPLAY_HEIGHT DISPLAY_DEPTH
 RUN echo 'export JAVA_DEBUG="-Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,address=${WLS_DEBUG_PORT},server=y,suspend=n -Djava.compiler=NONE"' >> /etc/profile.d/env.sh
 RUN echo 'export USER_MEM_ARGS="-Xms768m -Xmx768m -XX:PermSize=256m -XX:MaxPermSize=256m"' >> /etc/profile.d/env.sh
 RUN install-oracle-jdk.sh http://download.oracle.com/otn-pub/java/jdk/$JDK_VERSION
