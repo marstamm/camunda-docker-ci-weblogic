@@ -71,7 +71,7 @@ daemon:
 
 # start container with port mapping
 stage: rmf
-	$(DOCKER) run -d $(OPTS) -p 5900:5900 -p 7777:7777 -p 9060:9060 -p 9080:9080 $(IMAGE)
+	$(DOCKER) run -d $(OPTS) -p 5900:5900 -p 8787:8787 -p 7001:7001 -p 7002:7002 $(IMAGE)
 
 # start interactive container with bash
 bash:
