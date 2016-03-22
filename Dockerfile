@@ -51,6 +51,8 @@ ADD etc/oracle/create-wls-domain.py /home/camunda/
 
 # Install WebLogic as camunda users
 RUN su camunda -c /usr/local/bin/install-weblogic.sh
+# Fix corrupt weblogic jar files
+RUN su camunda -c /usr/local/bin/fix-weblogic.sh
 # Create Weblogic domain
 RUN su camunda -c /usr/local/bin/create-wls-domain.sh
 # Create symlink to log
