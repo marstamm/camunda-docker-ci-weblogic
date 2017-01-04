@@ -26,6 +26,7 @@ ADDITIONAL_TAGS=$(wordlist 2, $(words $(TAGS)), $(TAGS))
 IMAGE=$(IMAGE_NAME):$(FIRST_TAG)
 # options to use for running the image, can be extended by FLAGS variable
 OPTS=--name $(CONTAINER_NAME) -t $(FLAGS)
+FORCE_FLAG:=$(shell if [ `docker version -f '{{.Client.Version}}' | cut -f2 -d.` -lt 10   ]; then echo -f; fi)
 # the docker command which can be configured by the DOCKER_OPTS variable
 DOCKER=docker $(DOCKER_OPTS)
 # the temporary Dockerfile name with replaced parent image
@@ -41,7 +42,7 @@ build:
 	$(shell sed '1s!.*!FROM $(PARENT_IMAGE)!' Dockerfile > $(DOCKERFILE_TMP))
 	$(DOCKER) build -f $(DOCKERFILE_TMP) --rm=$(REMOVE) --force-rm=$(FORCE_RM) --no-cache=$(NO_CACHE) -t $(IMAGE) .
 	for tag in $(ADDITIONAL_TAGS); do \
-		$(DOCKER) tag -f $(IMAGE) $(IMAGE_NAME):$$tag; \
+		$(DOCKER) tag $(FORCE_FLAG) $(IMAGE) $(IMAGE_NAME):$$tag; \
 	done
 
 # pull image from registry

@@ -16,6 +16,7 @@ ENV JDK_VERSION=8u66-b17/jdk-8u66-linux-x64.rpm \
     WLS_HTTPS_PORT=7002 \
     WLS_DEBUG_PORT=8787 \
     CONFIG_JVM_ARGS=-Djava.security.egd=file:/dev/./urandom \
+    CHROME_VERSION=55.0.2883.87-1 \
     DISPLAY=:0 \
     DISPLAY_WIDTH=1366 \
     DISPLAY_HEIGHT=768 \
@@ -36,10 +37,9 @@ RUN update-ca-trust enable && \
     $JAVA_HOME/bin/keytool -noprompt -keystore $JAVA_HOME/jre/lib/security/cacerts -storepass changeit -import -trustcacerts -v -alias nginx_consul -file /etc/pki/ca-trust/source/anchors/nginx_consul.crt && \
     update-ca-trust extract
 
-# add google-chrome repo
-ADD /etc/yum.repos.d/* /etc/yum.repos.d/
 # install packages for ui
-RUN install-packages.sh xvfb x11vnc google-chrome-stable
+RUN yum -y localinstall https://nginx.service.consul/ci/binaries/google/chrome/google-chrome-stable_${CHROME_VERSION}_x86_64.rpm && \
+    install-packages.sh x11vnc
 # fix dbus error which prevents chrome from starting
 RUN dbus-uuidgen > /etc/machine-id
 
