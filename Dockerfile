@@ -39,7 +39,7 @@ RUN update-ca-trust enable && \
 
 # install packages for ui
 RUN yum -y localinstall https://nginx.service.consul/ci/binaries/google/chrome/google-chrome-stable_${CHROME_VERSION}_x86_64.rpm && \
-    install-packages.sh x11vnc
+    install-packages.sh dejavu-sans-fonts x11vnc
 # fix dbus error which prevents chrome from starting
 RUN dbus-uuidgen > /etc/machine-id
 
