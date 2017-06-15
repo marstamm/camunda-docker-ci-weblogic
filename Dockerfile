@@ -22,7 +22,7 @@ ENV JDK_VERSION=8u66-b17/jdk-8u66-linux-x64.rpm \
     DISPLAY_HEIGHT=768 \
     DISPLAY_DEPTH=16 \
     DBUS_SESSION_BUS_ADDRESS=/dev/null \
-    GCLOUD=/opt/google-cloud-sdk \
+    GCLOUD=/opt/google-cloud-sdk/bin \
     JAVA_OPTIONS="-Djava.security.egd=file:/dev/./urandom\ -XX:+PrintCommandLineFlags"
 
 RUN add-path.sh $WLS_BIN_DIR $GCLOUD
@@ -30,7 +30,7 @@ RUN save-env.sh WLS_INSTALL_HOME WLS_HOME WLS_DOMAIN_HOME WLS_SERVER WLS_ADMIN_U
 RUN echo 'export JAVA_DEBUG="-Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,address=${WLS_DEBUG_PORT},server=y,suspend=n -Djava.compiler=NONE"' >> /etc/profile.d/env.sh
 RUN echo 'export USER_MEM_ARGS="-Xms768m -Xmx768m -XX:PermSize=256m -XX:MaxPermSize=256m"' >> /etc/profile.d/env.sh
 
-RUN gsutil cp gs://camunda-ops/binaries/oracle/jdk/jdk-8u112-linux-x64.rpm /tmp/jdk8.rpm && rpm -ivh /tmp/jdk8.rpm && rm /tmp/jdk8.rpm
+RUN echo $PATH && gsutil cp gs://camunda-ops/binaries/oracle/jdk/jdk-8u112-linux-x64.rpm /tmp/jdk8.rpm && rpm -ivh /tmp/jdk8.rpm && rm /tmp/jdk8.rpm
 
 # update certs for JDK 8 keystore
 RUN update-ca-trust enable && \
