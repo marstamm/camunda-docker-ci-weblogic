@@ -2,7 +2,6 @@
 set -e
 
 WLS_TEMP=/tmp/wls
-PATH=/opt/google-cloud-sdk/bin:$PATH
 
 echo "Retrieving installation files"
 gsutil cp gs://camunda-ops/binaries/oracle/weblogic/${WLS_PKG_FILE} /tmp/${WLS_PKG_FILE}
