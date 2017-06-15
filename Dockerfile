@@ -1,4 +1,4 @@
-FROM registry.camunda.com/camunda-ci-base-centos:latest
+FROM gcr.io/ci-30-162810/centos:v0.1.2
 
 # Set environment variables for WebSphere
 ENV JDK_VERSION=8u66-b17/jdk-8u66-linux-x64.rpm \
