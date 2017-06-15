@@ -4,7 +4,7 @@ set -e
 WLS_TEMP=/tmp/wls
 
 echo "Retrieving installation files"
-gsutil cp gs://camunda-ops/binaries/oracle/weblogic/${WLS_PKG_FILE} /tmp/${WLS_PKG_FILE}
+$GCLOUD/gsutil cp gs://camunda-ops/binaries/oracle/weblogic/${WLS_PKG_FILE} /tmp/${WLS_PKG_FILE}
 
 mkdir -p ${WLS_TEMP} ${WLS_INSTALL_HOME}
 # do some repairing. something doesn't work with zip and pkzip format
