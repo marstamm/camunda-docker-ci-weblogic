@@ -38,8 +38,9 @@ RUN update-ca-trust enable && \
     update-ca-trust extract
 
 # install packages for ui
-RUN yum -y localinstall https://nginx.service.consul/ci/binaries/google/chrome/google-chrome-stable_${CHROME_VERSION}_x86_64.rpm && \
+RUN yum -y localinstall https://storage.googleapis.com/camunda-ops/binaries/google/chrome/google-chrome-stable_${CHROME_VERSION}_x86_64.rpm && \
     install-packages.sh dejavu-sans-fonts x11vnc
+
 # fix dbus error which prevents chrome from starting
 RUN dbus-uuidgen > /etc/machine-id
 
@@ -52,10 +53,13 @@ ADD etc/oracle/create-wls-domain.py /home/camunda/
 
 # Install WebLogic as camunda users
 RUN su camunda -c /usr/local/bin/install-weblogic.sh
+
 # Fix corrupt weblogic jar files
 RUN su camunda -c /usr/local/bin/fix-weblogic.sh
+
 # Create Weblogic domain
 RUN su camunda -c /usr/local/bin/create-wls-domain.sh
+
 # Create symlink to log
 RUN su camunda -c "ln -s --target-directory=/home/camunda ${WLS_DOMAIN_HOME}/servers/${WLS_SERVER}/logs/${WLS_SERVER}.log"
 

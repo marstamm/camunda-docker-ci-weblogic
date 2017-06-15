@@ -2,9 +2,10 @@
 set -e
 
 WLS_TEMP=/tmp/wls
+PATH=/opt/google-cloud-sdk/bin:$PATH
 
 echo "Retrieving installation files"
-curl -silent https://nginx.service.consul/ci/binaries/oracle/weblogic/${WLS_PKG_FILE} > /tmp/${WLS_PKG_FILE}
+gsutil cp gs://camunda-ops/binaries/oracle/weblogic/${WLS_PKG_FILE} /tmp/${WLS_PKG_FILE}
 
 mkdir -p ${WLS_TEMP} ${WLS_INSTALL_HOME}
 # do some repairing. something doesn't work with zip and pkzip format
