@@ -5,6 +5,10 @@ IMAGE_NAME?=gcr.io/ci-30-162810/weblogic
 TAGS?=latest
 NAME=ci-weblogic
 
+WEBLOGIC_VERSIONS=12R2
+BUILD_VERSIONS=$(addprefix build-,$(WEBLOGIC_VERSIONS))
+PUSH_VERSIONS=$(addprefix push-,$(WEBLOGIC_VERSIONS))
+
 # parent image name
 FROM=$(shell head -n1 Dockerfile | cut -d " " -f 2)
 # the first tag and the remaining tags split up
@@ -29,7 +33,7 @@ build: pull-from pull build-image test ## build the image for the first tag and 
 build-image: ## build the image
 	$(DOCKER) build --rm=$(REMOVE) --force-rm=$(FORCE_RM) --no-cache=$(NO_CACHE) --build-arg TAG_NAME=$(TAGS) -t $(IMAGE) .
 	@for tag in $(ADDITIONAL_TAGS); do \
-		$(DOCKER) tag $(FORCE_FLAG) $(IMAGE) $(IMAGE_NAME):$$tag; \
+		$(DOCKER) tag $(IMAGE) $(IMAGE_NAME):$$tag; \
 	done
 
 .PHONY: pull
@@ -46,8 +50,19 @@ push: ## push container to registry
 		$(DOCKER) push $(IMAGE_NAME):$$tag; \
 	done
 
-.PHONY: publish
-publish: build-image push ## pull parent image, pull image, build image and push to repository
+.PHONY: build-all
+build-all: $(BUILD_VERSIONS) ## build Docker image for every Weblogic version
+
+.PHONY: build-%s
+build-%:
+	make build TAGS=$*v$(FIRST_TAG)
+
+.PHONY: push-all
+push-all: $(PUSH_VERSIONS) ## push Docker image for every Weblogic version
+
+.PHONY: push-%s
+push-%:
+	make push TAGS=$*v$(FIRST_TAG)
 
 .PHONY: run
 run: ## run container
@@ -63,7 +78,8 @@ shell: ## start interactive container with bash
 
 .PHONY: test
 test: daemon ## test if image starts and weblogic becomes ready afterwards
-	$(DOCKER) exec -t $(NAME) supervisorctl start weblogic
+	sleep 10
+	$(DOCKER) exec -t $(NAME) bash -c 'supervisorctl start weblogic; exit $$?' | grep -q 'started' || { (>&2 echo 'Error: Weblogic did not start in time.'); exit 1; }
 	sleep 30
 	$(DOCKER) exec -t $(NAME) curl -vvv localhost:7001/console
 	-$(DOCKER) rm -f $(NAME)
