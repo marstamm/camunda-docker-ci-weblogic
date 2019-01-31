@@ -1,4 +1,4 @@
-FROM gcr.io/ci-30-162810/chrome:64v0.2.0
+FROM gcr.io/ci-30-162810/chrome:64v0.2.1
 
 # Set environment variables for WebSphere
 ENV WLS_PKG_FILE=fmw_12.2.1.0.0_wls_quick_Disk1_1of1.zip \
