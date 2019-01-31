@@ -5,9 +5,9 @@ IMAGE_NAME?=gcr.io/ci-30-162810/weblogic
 TAGS?=latest
 NAME=ci-weblogic
 
-WEBLOGIC_VERSIONS=12R2
-BUILD_VERSIONS=$(addprefix build-,$(WEBLOGIC_VERSIONS))
-PUSH_VERSIONS=$(addprefix push-,$(WEBLOGIC_VERSIONS))
+VERSIONS=12R2
+BUILD_VERSIONS=$(addprefix build-,$(VERSIONS))
+PUSH_VERSIONS=$(addprefix push-,$(VERSIONS))
 
 # parent image name
 FROM=$(shell head -n1 Dockerfile | cut -d " " -f 2)
@@ -67,6 +67,13 @@ push-%:
 .PHONY: run
 run: ## run container
 	$(DOCKER) run --rm $(OPTS) $(IMAGE)
+
+.PHONY: tag-all
+tag-all:
+	@for version in $(VERSIONS); do \
+		echo "Tagging: $${version}$(FIRST_TAG)"; \
+		git tag -a -f -m "$${version}$(FIRST_TAG)" $${version}$(FIRST_TAG); \
+	done
 
 .PHONY: daemon
 daemon: ## start container as daemon
